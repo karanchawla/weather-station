@@ -18,7 +18,7 @@ def time_converter(time):
 
 
 def url_builder(city_id):
-    user_api = '2a8d6d5d0302762248712188187429db'  
+    user_api = 'your user api key here'  
     unit = 'metric'  # For Fahrenheit use imperial, for Celsius use metric, and the default is Kelvin.
     api = 'http://api.openweathermap.org/data/2.5/weather?id='     # City ID list here: http://bulk.openweathermap.org/sample/city.list.json.gz
     # Hayward: 5355933
@@ -71,7 +71,7 @@ def data_output(data):
     print('Last update from the server: {}'.format(data['dt']))
     print('---------------------------------------')
 
-slack_client = SlackClient("xoxb-75762177540-422468766290-b4RBB4ws8wrXeIlQXoB7KPqP")
+slack_client = SlackClient("your slack bot key here")
 user_list = slack_client.api_call("users.list")
 for user in user_list.get('members'):
     if user.get('name') == "weatherops":
