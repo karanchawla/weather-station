@@ -17,7 +17,7 @@ class SlackInterface():
         self._slackClient = SlackClient(user_key)
         self._weatherObj = Weather(api_key, city_id)
 
-    def get_bot_user_id(self):
+    def __get_bot_user_id(self):
         user_list = self._slackClient.api_call('users.list')
         for user in user_list.get('members'):
             if user.get('name') == "weatherops":
@@ -28,7 +28,7 @@ class SlackInterface():
     def spin(self):
         if self._slackClient.rtm_connect():
             print("Connected!")
-            self.get_bot_user_id()
+            self.__get_bot_user_id()
 
         while True: 
             new_events = self._slackClient.rtm_read()
