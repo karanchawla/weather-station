@@ -43,7 +43,7 @@ class SlackInterface():
                             if re.match(r'.*(wind).*', message_text, re.IGNORECASE):
                                 data = self._weatherObj.get_weather_data()
                                 self._slackClient.api_call("chat.postMessage", channel=ch,
-                                text = "Current winds are at {} Kts in {}, last updated from the server at {}".format(float(data['wind']) * 1.94384, data['city'], data['dt']),
+                                text = "Current winds are at {} Kts in {}, last updated from the server at {}".format(round(float(data['wind']) * 1.94384, 2), data['city'], data['dt']),
                                 as_user=True)
                             elif re.match(r'.*(temperature).*', message_text, re.IGNORECASE):
                                 data = self._weatherObj.get_weather_data()
@@ -75,3 +75,11 @@ class SlackInterface():
             time.sleep(1)
         else:
             print("Connection Failed, invalid token?")
+
+if __name__=="__main__":
+    user_key = "your user key here"
+    api_key = "your api key here"
+    city_id = "your city id here"
+    bot_name = "your weather bot name here"
+    slackbot = SlackInterface(user_key, "weatherops", api_key, city_id)
+    slackbot.spin()
