@@ -21,5 +21,6 @@ bot_name = "your weather bot name here"
 ![Example](https://github.com/karanchawla/weather-station/blob/master/images/screenshot.png) 
 
 ## To-Do
+- [ ] Unit testing
 - [ ] Compelete RPi integration 
 - [ ] Add cont. monitoring capability 
