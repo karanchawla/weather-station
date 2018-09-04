@@ -4,8 +4,8 @@
 import datetime
 import urllib
 import re
-import json 
-import time 
+import json
+import time
 from slackclient import SlackClient
 from weather_interface import Weather
 from anemometer import Anemometer
@@ -31,9 +31,9 @@ class SlackInterface():
             print("Connected!")
             self.__get_bot_user_id()
 
-        while True: 
-            new_events = self._slackClient.rtm_read()
+        while True:
             self._windSensor.compute()
+            new_events = self._slackClient.rtm_read()
             for event in new_events:
                 if "type" in event:
                     if event['type'] == "message" and "text" in event:
@@ -45,7 +45,8 @@ class SlackInterface():
                             if re.match(r'.*(wind).*', message_text, re.IGNORECASE):
                                 data = self._weatherObj.get_weather_data()
                                 self._slackClient.api_call("chat.postMessage", channel=ch,
-                                text = "Current winds are at {} Kts in {}, last updated from the server at {}".format(round(float(data['wind']) * 1.94384, 2), data['city'], data['dt']),
+                                #text = "Current winds are at {} Kts in {}, last updated from the server at {}".format(round(float(data['wind']) * 1.94384, 2), data['city'], data['dt']),
+                                text = "Current winds are at {} Kts, with gusts of {} Kts".format(round(self._windSensor.windSpeed,2), round(self._windSensor.windGust,2)),
                                 as_user=True)
                             elif re.match(r'.*(temperature).*', message_text, re.IGNORECASE):
                                 data = self._weatherObj.get_weather_data()

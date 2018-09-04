@@ -15,32 +15,34 @@ class Anemometer():
         self._windCount = 0
         self._radius = radius
         self._windInterval = wind_interval
-        self._K = 1.18 
+        self._K = 1.18
+        self._storeSpeeds = []
+        self._windSpeedSensor.when_activated = self.spin
+        self.windSpeed = 0
 
     def spin(self):
         self._windCount += 1
 
-    def __calculateSpeed(self, time_sec):
-        speed_KPH = self.compute_speed(self._radius, time_sec, self._windInterval)
+    def __calculateSpeed(self):
+        speed_KPH = self.compute_speed(self._radius, self._windInterval)
         return speed_KPH * self._K
 
     def __resetWind(self):
         self._windCount = 0
 
     def compute(self):
-        storeSpeeds = []
         start_time = time.time()
         while time.time() - start_time <= self._windInterval:
             self.__resetWind()
             time.sleep(self._windInterval)
-            finalSpeed = self.__calculateSpeed(self._windInterval)
-            storeSpeeds.append(finalSpeed)
-        self._windGust = max(storeSpeeds)
-        self._windSpeed = statistics.mean(storeSpeeds)
+            finalSpeed = self.__calculateSpeed()
+            self._storeSpeeds.append(finalSpeed)
+        self.windGust = max(self._storeSpeeds)
+        self.windSpeed = statistics.mean(self._storeSpeeds)
 
-    def compute_speed(self, radius, time_sec, frequency):
+    def compute_speed(self, radius, time_sec):
         circumference = 2 * pi * radius
-        rotations = frequency / 2;
-        speed = (circumference * rotations / time_sec) 
+        rotations = self._windCount / 2;
+        speed = (circumference * rotations / time_sec)
         speed_KPH = speed * SECS_IN_HOUR / CM_IN_KM
         return speed_KPH
