@@ -8,7 +8,7 @@ import json
 import time 
 from slackclient import SlackClient
 from weather_interface import Weather
-
+from anemometer import Anemometer
 
 class SlackInterface():
     def __init__(self, user_key, bot_name, api_key, city_id):
@@ -16,6 +16,7 @@ class SlackInterface():
         self._botName = bot_name
         self._slackClient = SlackClient(user_key)
         self._weatherObj = Weather(api_key, city_id)
+        self._windSensor = Anemometer(5, 9.0, 5)
 
     def __get_bot_user_id(self):
         user_list = self._slackClient.api_call('users.list')
@@ -32,6 +33,7 @@ class SlackInterface():
 
         while True: 
             new_events = self._slackClient.rtm_read()
+            self._windSensor.compute()
             for event in new_events:
                 if "type" in event:
                     if event['type'] == "message" and "text" in event:
@@ -77,9 +79,9 @@ class SlackInterface():
             print("Connection Failed, invalid token?")
 
 if __name__=="__main__":
-    user_key = "your user key here"
-    api_key = "your api key here"
-    city_id = "your city id here"
-    bot_name = "your weather bot name here"
+    user_key = "xoxb-75762177540-422468766290-b4RBB4ws8wrXeIlQXoB7KPqP"
+    api_key = "2a8d6d5d0302762248712188187429db"
+    city_id = "5355933"
+    bot_name = "weatherops"
     slackbot = SlackInterface(user_key, "weatherops", api_key, city_id)
     slackbot.spin()
